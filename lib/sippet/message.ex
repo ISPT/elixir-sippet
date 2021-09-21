@@ -1618,14 +1618,14 @@ defmodule Sippet.Message do
 
   defp do_auth_parameters([{name, value} | tail], [])
        when name in ["username", "realm", "nonce", "uri", "response", "cnonce", "opaque"],
-    do: do_auth_parameters(tail, [[name, "=\"", value, "\""]])
+       do: do_auth_parameters(tail, [[name, "=\"", value, "\""]])
 
   defp do_auth_parameters([{name, value} | tail], []),
     do: do_auth_parameters(tail, [[name, "=", value]])
 
   defp do_auth_parameters([{name, value} | tail], result)
        when name in ["username", "realm", "nonce", "uri", "response", "cnonce", "opaque"],
-    do: do_auth_parameters(tail, [[",", name, "=\"", value, "\""] | result])
+       do: do_auth_parameters(tail, [[",", name, "=\"", value, "\""] | result])
 
   defp do_auth_parameters([{name, value} | tail], result),
     do: do_auth_parameters(tail, [[",", name, "=", value] | result])
