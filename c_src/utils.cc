@@ -374,7 +374,7 @@ void TrimLWS(std::string::const_iterator* begin,
 bool IsQuote(char c) {
   // Single quote mark isn't actually part of quoted-text production,
   // but apparently some servers rely on this.
-  return c == '"' || c == '\'';
+  return c == '"';
 }
 
 std::string Unquote(std::string::const_iterator begin,
