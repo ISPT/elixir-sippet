@@ -256,10 +256,10 @@ defmodule Sippet.Message.Test do
 
     message =
       "INVITE sip:5531999921578@85.90.232.52 SIP/2.0\r\n" <>
+      "Content-Length: 0\r\n" <>
       "Via: SIP/2.0/UDP 192.168.65.17:5566;branch=z9hG4bKMD3xTURX0heu, " <>
           "SIP/2.0/STOMP D6wU5SvE.invalid;rport=5672;received=192.168.65.30" <>
           ";branch=z9hG4bKRtAc6V4VeIuR\r\n" <>
-      "Content-Length: 0\r\n" <>
       "\r\n"
 
     assert message == req |> to_string
@@ -274,8 +274,8 @@ defmodule Sippet.Message.Test do
 
     message =
       "INVITE sip:foo@bar.com SIP/2.0\r\n" <>
-      "Via: SIP/2.0/UDP 205.205.74.6:5060;rport;branch=z9hG4bK-26320-1-0\r\n" <>
       "Content-Length: 0\r\n" <>
+      "Via: SIP/2.0/UDP 205.205.74.6:5060;rport;branch=z9hG4bK-26320-1-0\r\n" <>
       "\r\n"
 
     assert message == req |> to_string
@@ -299,4 +299,21 @@ defmodule Sippet.Message.Test do
     assert parsed_request.body == expected_body
   end
 
+  test "parse multiple Reason headers" do
+    req =
+      """
+      CANCEL sip:bob@biloxi.com SIP/2.0
+      Reason: X.int;reasoncode=0x0000030A;add-info=068C.0001.0001
+      Reason: SIP;cause=200;text="Call Rejected By User"
+      """ |> Message.parse!()
+
+    message =
+      "CANCEL sip:bob@biloxi.com SIP/2.0\r\n" <>
+      "Content-Length: 0\r\n" <>
+      "Reason: X.int;reasoncode=0x0000030A;add-info=068C.0001.0001, " <>
+      "SIP;text=\"Call Rejected By User\";cause=200\r\n" <>
+        "\r\n"
+
+    assert message == req |> to_string
+  end
 end
