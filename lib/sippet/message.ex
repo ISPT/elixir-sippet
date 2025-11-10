@@ -1386,7 +1386,15 @@ defmodule Sippet.Message do
     ]
   end
 
-  defp do_headers(%{} = headers), do: do_headers(Map.to_list(headers), [])
+  defp do_headers(%{} = headers) do
+    {content_length, other_headers} = Map.pop(headers, :content_length)
+    header_list = Map.to_list(other_headers)
+
+    case content_length do
+      nil -> do_headers(header_list, [])
+      value -> do_headers(header_list ++ [{:content_length, value}], [])
+    end
+  end
   defp do_headers([], result), do: result
 
   defp do_headers([{name, value} | tail], result),
