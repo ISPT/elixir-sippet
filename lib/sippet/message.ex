@@ -1392,7 +1392,7 @@ defmodule Sippet.Message do
 
     case content_length do
       nil -> do_headers(header_list, [])
-      value -> do_headers(header_list ++ [{:content_length, value}], [])
+      value -> do_headers([{:content_length, value} | header_list], [])
     end
   end
   defp do_headers([], result), do: result
